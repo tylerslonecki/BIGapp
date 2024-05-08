@@ -1,42 +1,42 @@
-# Install and load required packages
-required_cran_packages <- c("updog", "ggplot2","devtools","GWASpoly","SNPRelate",
-                       "adegenet", "future", "scales", "AGHmatrix", "stats", 
-                       "factoextra", "readxl", "ggrepel", "dplyr", "shiny",
-                       "shinydashboard","randomcoloR","plotly", "DT","RColorBrewer",
-                       "dichromat", "bs4Dash", "shinyWidgets","data.table",
-                       "matrixcalc","Matrix", "shinyalert","rrBLUP", "tidyverse",
-                       "foreach", "doParallel","VariantAnnotation")
+# Install required packages
+#Some packages are from GitHub or BioConductor, but shinyapps.io detects this and loads them automatically
+#See if Shiny Connect does this as well or Shiny Server
+library("shiny")
+#library("renv")
+library("ggplot2")
+#library("BiocManager")
+library("devtools")
+library("adegenet")
+library("future")
+library("scales")
+library("AGHmatrix")
+library("stats")
+library("factoextra")
+library("readxl")
+library("ggrepel")
+library("dplyr")
+library("shiny")
+library("shinydashboard")
+library("randomcoloR")
+library("plotly")
+library("DT")
+library("RColorBrewer")
+library("dichromat")
+library("bs4Dash")
+library("shinyWidgets")
+library("data.table")
+library("matrixcalc")
+library("Matrix")
+library("shinyalert")
+library("rrBLUP")
+library("tidyverse")
+#library("foreach")
+#library("doParallel")
+library("SNPRelate")
+library("VariantAnnotation")
+library("GWASpoly")
+library("updog")
 
-required_bio_packages <- c("SNPRelate","VariantAnnotation")
-
-Dev_tools_packages <- c("GWASpoly")
-
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-#Bioconductor
-for(package in required_bio_packages){
-  if(!require(package, character.only = TRUE)) {
-    BiocManager::install(package)
-    library(package, character.only = TRUE)
-  }
-}
-
-#CRAN
-for(package in required_cran_packages) {
-  if(!require(package, character.only = TRUE)) {
-    install.packages(package)
-    library(package, character.only = TRUE)
-  }
-}
-
-#GitHub
-for(package in Dev_tools_packages) {
-  if(!require(package, character.only = TRUE)) {
-    devtools::install_github("jendelman/GWASpoly", build_vignettes=FALSE)
-    library(package, character.only = TRUE)
-  }
-}
 
 # UI
 ui <- dashboardPage(
@@ -411,9 +411,9 @@ ui <- dashboardPage(
           column(width = 3,
             box(title="Inputs", width = 12, collapsible = TRUE, collapsed = FALSE, status = "info", solidHeader = TRUE,
               fileInput("diversity_file", "Choose Genotypes File"),
-              #fileInput("phenotype_file", "Choose Phenotype File"),
-              textInput("output_name", "Output File Name"),
-              numericInput("ploidy", "Species Ploidy", min = 1, value = 2),
+              fileInput("pop_file", "Choose Passport File"),
+              #textInput("output_name", "Output File Name"),
+              numericInput("diversity_ploidy", "Species Ploidy", min = 1, value = 2),
               #numericInput("cores", "Number of CPU Cores", min = 1, max = (future::availableCores() - 1), value = 1),
               actionButton("diversity_start", "Run Analysis"),
               #downloadButton("download_pca", "Download All Files"),
@@ -1958,7 +1958,7 @@ server <- function(input, output, session) {
   pred_outputs$corr_output <- results$PredictionAccuracy
 
   #TESTING!!!
-  #write.csv(results$GEBVs, "GEBVs_test.csv")
+  write.csv(results$GEBVs, "GEBVs_test.csv")
 
   #Status
   updateProgressBar(session = session, id = "pb_prediction", value = 90, status = "info", title = "Generating Results")
