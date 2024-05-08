@@ -27,7 +27,7 @@ RUN apt-get update && \
 ## app folder
 COPY /BIG_app ./app
 ## renv.lock file
-COPY /BIG_app/renv.lock ./renv.lock
+#COPY /BIG_app/renv.lock ./renv.lock
 
 # Use all package repositories. Install app dependencies.
 RUN R -e 'setRepositories(ind=1:7); install.packages(c("updog", "ggplot2", "VariantAnnotation", "SNPRelate", "adegenet", "future", "scales", "AGHmatrix", "stats", "factoextra", "readxl", "ggrepel", "dplyr", "shiny", "shinydashboard","randomcoloR","plotly", "DT","RColorBrewer", "dichromat", "bs4Dash", "shinyWidgets","data.table", "matrixcalc","Matrix", "shinyalert","rrBLUP", "tidyverse"))'
