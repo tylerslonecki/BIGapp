@@ -14,6 +14,4 @@ To use:
 - Tutorial followed: https://www.databentobox.com/2020/05/31/shinyproxy-with-docker-swarm/
 
 ### Current State
-- Testing docker images run, as well as a smaller custom made docker image
-- Currently, the BIG app docker image runs fine locally and on the aws server when initiated manually
-    - Does not start up and times out (Error 500) when using ShinyProxy
+- The docker image is deployed successfully
