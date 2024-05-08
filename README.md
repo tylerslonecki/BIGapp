@@ -9,3 +9,11 @@ To use:
 3. setwd("/Genomics_Shiny_App")
 4. runApp("BIG_app")
 5. View shiny app in browser
+
+### Starting ShinyProxy server using Docker Swarm
+- Tutorial followed: https://www.databentobox.com/2020/05/31/shinyproxy-with-docker-swarm/
+
+### Current State
+- Testing docker images run, as well as a smaller custom made docker image
+- Currently, the BIG app docker image runs fine locally and on the aws server when initiated manually
+    - Does not start up and times out (Error 500) when using ShinyProxy
