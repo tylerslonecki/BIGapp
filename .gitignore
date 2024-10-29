@@ -5,3 +5,6 @@
 .DS_Store
 BIGapp.Rproj
 BIG_app/app_temp.R
+/electron_app/dist
+/electron_app/R
+/electron_app/node_modules

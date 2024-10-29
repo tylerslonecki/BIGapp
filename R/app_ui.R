@@ -11,7 +11,22 @@
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
-    golem_add_external_resources(),
+    golem_add_external_resources <- function() {
+      add_resource_path("www", app_sys("www"))
+
+      tags$head(
+        # Existing resources
+        favicon(),
+        bundle_resources(
+          path = app_sys("www"),
+          app_title = "BIGapp"
+        ),
+        # Include jQuery and other scripts
+        tags$script(src = "www/jquery-3.7.1.min.js"),
+        tags$script(src = "www/bootstrap.min.js"),
+        tags$script(src = "www/shiny.min.js")
+      )
+    },
     # Your application UI logic
     bs4DashPage(
       skin = "black",

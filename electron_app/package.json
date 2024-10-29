@@ -1,0 +1,67 @@
+{
+  "name": "BIGApp",
+  "version": "1.0.0",
+  "description": "A minimal golem-based Shiny app packaged with Electron",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build:x64": "electron-builder --mac dmg --mac zip --x64",
+    "build:arm64": "electron-builder --mac dmg --mac zip --arm64",
+    "build:universal": "electron-builder --mac dmg --mac zip --universal",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.yourdomain.bigapp",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.icns",
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "gatekeeperAssess": false
+    },
+    "asar": true,
+    "asarUnpack": [
+      "R/**",
+      "launch_app.R"
+    ],
+    "dmg": {
+      "iconSize": 100,
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "R",
+        "to": "R"
+      }
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.0.2",
+    "electron-builder": "^25.1.8",
+    "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "electron-log": "^5.2.0"
+  }
+}
