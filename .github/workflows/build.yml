@@ -60,8 +60,8 @@ jobs:
       - name: Install gfortran from CRAN
         if: runner.os == 'macOS'
         run: |
-          curl -LO https://mac.r-project.org/libs-arm64/gfortran-f51c2da9-darwin20.0-arm64.tar.gz
-          sudo tar fvxz gfortran-f51c2da9-darwin20.0-arm64.tar.gz -C /
+          curl -LO https://mac.r-project.org/libs-arm64/gfortran-f51f1da0-darwin20.0-arm64.tar.gz	
+          sudo tar fvxz gfortran-f51f1da0-darwin20.0-arm64.tar.gz	 -C /
 
 
       # Install R packages
