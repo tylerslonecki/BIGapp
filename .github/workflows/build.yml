@@ -56,37 +56,24 @@ jobs:
         with:
           r-version: '4.2.2'
 
-      # Install gfortran on macOS
-      - name: Install gfortran on macOS
+      # Install gfortran from CRAN on macOS
+      - name: Install gfortran from CRAN
         if: runner.os == 'macOS'
         run: |
-          brew install gcc
+          curl -LO https://mac.r-project.org/libs-arm64/gfortran-f51c2da9-darwin20.0-arm64.tar.gz
+          sudo tar fvxz gfortran-f51c2da9-darwin20.0-arm64.tar.gz -C /
 
-      # Create symlink for gfortran
-      - name: Create symlink for gfortran
-        if: runner.os == 'macOS'
-        run: |
-          GFORTRAN_PATH=$(which gfortran)
-          echo "gfortran is at $GFORTRAN_PATH"
-          sudo mkdir -p /opt/R/arm64/bin
-          sudo ln -sf $GFORTRAN_PATH /opt/R/arm64/bin/gfortran
-          ls -l /opt/R/arm64/bin/
 
       # Install R packages
       - name: Install R packages
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+          RENV_CONFIG_AUTO_ACTIVATE: FALSE
         run: |
           Rscript -e 'install.packages("remotes", repos = "https://cran.rstudio.com")'
           Rscript -e 'remotes::install_github("jendelman/GWASpoly")'
           Rscript -e 'remotes::install_github("Breeding-Insight/BIGr")'
-          Rscript -e 'install.packages(c(
-            "golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr",
-            "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets",
-            "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr",
-            "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders",
-            "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config",
-            "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
+          Rscript -e 'install.packages(c("golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr", "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets", "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr", "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders", "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config", "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
 
       # Copy R into app directory (for macOS)
       - name: Copy R into app directory (macOS)
