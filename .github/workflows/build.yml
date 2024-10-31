@@ -1,0 +1,91 @@
+name: Build and Package Electron Shiny App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            node-version: '18'
+            arch: x64
+            build-script: build:mac-x64
+            artifact-name: BIGApp-mac-x64
+          - os: macos-latest
+            node-version: '18'
+            arch: arm64
+            build-script: build:mac-arm64
+            artifact-name: BIGApp-mac-arm64
+          - os: windows-latest
+            node-version: '18'
+            arch: x64
+            build-script: build:win
+            artifact-name: BIGApp-windows
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Cache Node.js dependencies
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      # Install Node.js dependencies
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      # Set up R 4.2.2
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.2.2'
+
+      # Install R packages
+      - name: Install R packages
+        run: |
+          Rscript -e 'install.packages("remotes", repos = "https://cran.rstudio.com")'
+          Rscript -e 'remotes::install_github("jendelman/GWASpoly")'
+          Rscript -e 'remotes::install_github("Breeding-Insight/BIGr")'
+          Rscript -e 'install.packages(c("golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr", "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets", "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr", "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders", "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config", "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
+
+      # Copy R into app directory (for macOS)
+      - name: Copy R into app directory (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p R
+          cp -R "$(R RHOME)/." R/
+
+      # Copy R into app directory (for Windows)
+      - name: Copy R into app directory (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mkdir R
+          xcopy /E /I "%R_HOME%\*" R
+
+      # Build the Electron app
+      - name: Build Electron App
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+        run: npm run ${{ matrix.build-script }}
+
+      # Upload the built application
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: dist/*

@@ -6,13 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build:x64": "electron-builder --mac dmg --mac zip --x64",
-    "build:arm64": "electron-builder --mac dmg --mac zip --arm64",
-    "build:universal": "electron-builder --mac dmg --mac zip --universal",
+    "build:mac-x64": "electron-builder --mac --x64",
+    "build:mac-arm64": "electron-builder --mac --arm64",
+    "build:win": "electron-builder --win",
     "build": "electron-builder"
   },
   "build": {
     "appId": "com.yourdomain.bigapp",
+    "productName": "BIGApp",
     "mac": {
       "category": "public.app-category.utilities",
       "target": [
@@ -23,7 +24,17 @@
       "hardenedRuntime": true,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "identity": null,
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "${productName}-${version}-win.${ext}"
     },
     "asar": true,
     "asarUnpack": [

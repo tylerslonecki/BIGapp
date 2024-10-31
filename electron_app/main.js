@@ -85,8 +85,16 @@ function startShinyApp() {
     basePath = __dirname;
   }
 
-  const rBinaryPath = path.join(basePath, 'R', 'R.framework', 'Resources', 'bin', 'Rscript');
-  const rScriptPath = path.join(basePath, 'launch_app.R');
+  let rBinaryPath;
+  if (app.isPackaged) {
+    if (isMac) {
+      rBinaryPath = path.join(basePath, 'R', 'bin', 'Rscript');
+    } else if (process.platform === 'win32') {
+      rBinaryPath = path.join(basePath, 'R', 'bin', 'Rscript.exe');
+    }
+  } else {
+    rBinaryPath = 'Rscript'; // Assumes Rscript is in PATH during development
+  }
 
   // Check if Rscript exists
   if (!fs.existsSync(rBinaryPath)) {
