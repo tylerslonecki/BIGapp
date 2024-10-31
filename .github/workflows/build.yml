@@ -87,6 +87,21 @@ jobs:
           Rscript -e 'remotes::install_github("Breeding-Insight/BIGr")'
           Rscript -e 'install.packages(c("golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr", "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets", "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr", "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders", "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config", "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
 
+      # Verify R Installation (Optional)
+      - name: Verify R Installation (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |s
+          # Check R version
+          Rscript -e "R.version.string"
+
+          # Verify R_HOME
+          $R_HOME = Rscript -e "cat(R.home())"
+          Write-Output "R_HOME is $R_HOME"
+
+          # List R_HOME contents
+          Get-ChildItem -Path $R_HOME | Sort-Object Name | Select-Object Name
+
       # Copy R into app directory (for macOS)
       - name: Copy R into app directory (macOS)
         if: runner.os == 'macOS'
@@ -97,9 +112,30 @@ jobs:
       # Copy R into app directory (for Windows)
       - name: Copy R into app directory (Windows)
         if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          mkdir electron_app\R
-          xcopy /E /I "%R_HOME%\*" electron_app\R
+          # Create the target directory
+          mkdir -Path electron_app\R -Force
+
+          # Retrieve R_HOME using Rscript
+          $R_HOME = Rscript -e "cat(R.home())"
+
+          # Output R_HOME for debugging
+          Write-Output "R_HOME is $R_HOME"
+
+          # Check if R_HOME directory exists
+          if (Test-Path $R_HOME) {
+            Write-Output "R_HOME directory exists."
+          } else {
+            Write-Error "R_HOME directory does not exist at $R_HOME"
+            exit 1
+          }
+
+          # List contents of R_HOME for verification
+          Get-ChildItem -Path $R_HOME -Recurse | Sort-Object FullName | Select-Object FullName
+
+          # Copy R files to the app directory
+          xcopy "$R_HOME\*" "electron_app\R\" /E /I /Y
 
       # Build the Electron app
       - name: Build Electron App
