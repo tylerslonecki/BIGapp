@@ -58,6 +58,8 @@ jobs:
 
       # Install R packages
       - name: Install R packages
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           Rscript -e 'install.packages("remotes", repos = "https://cran.rstudio.com")'
           Rscript -e 'remotes::install_github("jendelman/GWASpoly")'
