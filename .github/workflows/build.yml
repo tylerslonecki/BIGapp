@@ -107,7 +107,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir -p electron_app/R
-          cp -R "$(R --vanilla -e "cat(R.home())")/." electron_app/R/
+          cp -R "$(Rscript --vanilla -e "cat(R.home())")/." electron_app/R/
 
       # # Copy R into app directory (for Windows)
       # - name: Copy R into app directory (Windows)
