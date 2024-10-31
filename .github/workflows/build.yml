@@ -56,6 +56,12 @@ jobs:
         with:
           r-version: '4.2.2'
 
+      # Install gfortran on macOS
+      - name: Install gfortran on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install gcc
+
       # Install R packages
       - name: Install R packages
         env:
