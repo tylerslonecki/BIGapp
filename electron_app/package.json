@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build:x64": "electron-builder --mac dmg --mac zip --x64",
-    "build:arm64": "electron-builder --mac dmg --mac zip --arm64",
+    "build:mac-x64": "electron-builder --mac dmg --mac zip --x64",
+    "build:mac-arm64": "electron-builder --mac dmg --mac zip --arm64",
     "build:universal": "electron-builder --mac dmg --mac zip --universal",
     "build": "electron-builder"
   },
