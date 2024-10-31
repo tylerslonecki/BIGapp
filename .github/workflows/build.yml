@@ -13,17 +13,17 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            node-version: '18'
+            node-version: '20'
             arch: x64
             build-script: build:mac-x64
             artifact-name: BIGApp-mac-x64
           - os: macos-latest
-            node-version: '18'
+            node-version: '20'
             arch: arm64
             build-script: build:mac-arm64
             artifact-name: BIGApp-mac-arm64
           - os: windows-latest
-            node-version: '18'
+            node-version: '20'
             arch: x64
             build-script: build:win
             artifact-name: BIGApp-windows
