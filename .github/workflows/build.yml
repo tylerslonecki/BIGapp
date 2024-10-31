@@ -43,11 +43,12 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('electron_app/package-lock.json') }}
 
       # Install Node.js dependencies
       - name: Install Node.js dependencies
         run: npm ci
+        working-directory: electron_app
 
       # Set up R 4.2.2
       - name: Set up R
@@ -61,31 +62,38 @@ jobs:
           Rscript -e 'install.packages("remotes", repos = "https://cran.rstudio.com")'
           Rscript -e 'remotes::install_github("jendelman/GWASpoly")'
           Rscript -e 'remotes::install_github("Breeding-Insight/BIGr")'
-          Rscript -e 'install.packages(c("golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr", "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets", "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr", "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders", "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config", "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
+          Rscript -e 'install.packages(c(
+            "golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr",
+            "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets",
+            "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr",
+            "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders",
+            "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config",
+            "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
 
       # Copy R into app directory (for macOS)
       - name: Copy R into app directory (macOS)
         if: runner.os == 'macOS'
         run: |
-          mkdir -p R
-          cp -R "$(R RHOME)/." R/
+          mkdir -p electron_app/R
+          cp -R "$(R RHOME)/." electron_app/R/
 
       # Copy R into app directory (for Windows)
       - name: Copy R into app directory (Windows)
         if: runner.os == 'Windows'
         run: |
-          mkdir R
-          xcopy /E /I "%R_HOME%\*" R
+          mkdir electron_app\R
+          xcopy /E /I "%R_HOME%\*" electron_app\R
 
       # Build the Electron app
       - name: Build Electron App
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
         run: npm run ${{ matrix.build-script }}
+        working-directory: electron_app
 
       # Upload the built application
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.artifact-name }}
-          path: dist/*
+          path: electron_app/dist/*
