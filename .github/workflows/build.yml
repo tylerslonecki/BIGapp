@@ -91,7 +91,7 @@ jobs:
       - name: Verify R Installation (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: |s
+        run: |
           # Check R version
           Rscript -e "R.version.string"
 
