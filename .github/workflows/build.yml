@@ -2,9 +2,9 @@ name: Build and Package Electron Shiny App
 
 on:
   push:
-    branches: [ electron ]
+    branches: [ Electron-arm ]
   pull_request:
-    branches: [ electron ]
+    branches: [ Electron-arm ]
 
 jobs:
   build:
