@@ -78,14 +78,21 @@ function handleShinyOutput(data) {
 function startShinyApp() {
   let basePath;
   if (app.isPackaged) {
-    // When packaged, use the unpacked path
     basePath = path.join(process.resourcesPath, 'app.asar.unpacked');
   } else {
-    // During development
     basePath = __dirname;
   }
 
+  // Add comprehensive logging
+  log.info(`Base path: ${basePath}`);
+  log.info(`Contents of base path: ${fs.readdirSync(basePath)}`);
+  
   const rBinaryPath = path.join(basePath, 'R', 'R.framework', 'Resources', 'bin', 'Rscript');
+  
+  log.info(`Attempting to use R binary at: ${rBinaryPath}`);
+  log.info(`R binary exists: ${fs.existsSync(rBinaryPath)}`);
+
+  
   const rScriptPath = path.join(basePath, 'launch_app.R');
 
   // Check if Rscript exists
