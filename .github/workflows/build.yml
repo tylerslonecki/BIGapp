@@ -83,9 +83,9 @@ jobs:
           RENV_CONFIG_AUTO_ACTIVATE: FALSE
         run: |
           Rscript -e 'install.packages("remotes", repos = "https://cran.rstudio.com")'
-          Rscript -e 'remotes::install_github("jendelman/GWASpoly")'
-          Rscript -e 'remotes::install_github("Breeding-Insight/BIGr")'
-          Rscript -e 'install.packages(c("golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr", "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets", "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr", "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders", "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config", "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
+          # Rscript -e 'remotes::install_github("jendelman/GWASpoly")'
+          # Rscript -e 'remotes::install_github("Breeding-Insight/BIGr")'
+          # Rscript -e 'install.packages(c("golem", "httpuv", "shiny", "vcfR", "adegenet", "DT", "dplyr", "bs4Dash", "ggplot2", "purrr", "scales", "shinyWidgets", "shinydisconnect", "shinyalert", "shinyjs", "stringr", "tidyr", "updog", "AGHmatrix", "factoextra", "future", "shinycssloaders", "RColorBrewer", "tibble", "plotly", "rrBLUP", "MASS", "config", "Matrix", "matrixcalc", "markdown"), repos = "https://cran.rstudio.com")'
 
       #  # Verify R Installation on Windows (Optional)
       # - name: Verify R Installation (Windows)
@@ -136,6 +136,10 @@ jobs:
   
       #     # Copy R files to the app directory
       #     xcopy "$R_HOME\*" "electron_app\R\" /E /I /Y
+
+      - name: List R directory contents
+        run: |
+          ls -R electron_app/R
 
       # Build the Electron app
       - name: Build Electron App
